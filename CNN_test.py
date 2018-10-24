@@ -6,7 +6,7 @@ import glob
 import matplotlib.pyplot as plt
 
 
-def get_path_a(path):
+def get_path_a(path):                                      #得到一个文件夹里面所有的文件
     paths = []
     for root, dir, files in os.walk(path):
         for f in files:
