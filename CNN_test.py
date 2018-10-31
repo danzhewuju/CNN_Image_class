@@ -25,12 +25,37 @@ h = 100
 c = 3
 
 
-def read_one_image(path):
+def read_one_image(path):                          #图片的读取操作
     img = io.imread(path)
     # io.imshow(img)
     # plt.show()
     img = transform.resize(img,(w,h,c))
     return np.asarray(img)
+
+
+def run(data):
+    with tf.Session() as sess:
+        saver = tf.train.import_meta_graph('./train_dir/model.ckpt.meta')
+        saver.restore(sess, tf.train.latest_checkpoint('./train_dir/'))
+
+        graph = tf.get_default_graph()
+        x = graph.get_tensor_by_name("x:0")
+        feed_dict = {x: data}
+
+        logits = graph.get_tensor_by_name("logits_eval:0")
+
+        classification_result = sess.run(logits, feed_dict)
+
+        # 打印出预测矩阵
+        print(classification_result)
+        print(classification_result.shape)
+        # 打印出预测矩阵每一行最大值的索引
+        print(tf.argmax(classification_result, 1).eval())
+        # 根据索引通过字典对应图片的分类
+        output = []
+        output = tf.argmax(classification_result, 1).eval()
+        for i in range(len(output)):
+            print(paths[i] + "产品检状况:" + flower_dict[output[i]])
 
 
 with tf.Session() as sess:

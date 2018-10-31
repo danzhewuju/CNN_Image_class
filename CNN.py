@@ -28,7 +28,7 @@ def read_img(path):
     labels=[]
     for idx,folder in enumerate(cate):
         for im in glob.glob(folder+'/*.jpg'):
-            print('reading the images:%s'%(im))
+            print('reading the images:%s'%im)
             img=io.imread(im)
             # io.imshow(img)
             # plt.show()
@@ -160,7 +160,7 @@ def minibatches(inputs=None, targets=None, batch_size=None, shuffle=False):
 #训练和测试数据，可将n_epoch设置更大一些
 
 n_epoch=10
-batch_size=64
+batch_size=32
 saver=tf.train.Saver()
 sess=tf.Session()
 sess.run(tf.global_variables_initializer())

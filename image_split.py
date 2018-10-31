@@ -26,10 +26,11 @@ def split_image(re_path, save_path, label):
     imgs = read_image_all(re_path)
     count = 1
     for img in imgs:
-        if label == "good":
-            img = img[350:1793, 400:2041]
-        else:
-            img = img[605:, 470:2111]
+        # if label == "good":
+        #     img = img[350:1793, 400:2041]
+        # else:
+        #     img = img[605:, 470:2111]
+        img = img[290:, 433:2095]
         img_tem = np.hsplit(img, 3)
         for img_t in img_tem:
             path = save_path + "/" + str(count) + "_{0}.jpg".format(label)
@@ -39,6 +40,10 @@ def split_image(re_path, save_path, label):
     print("图片处理完成！")
     return True
 
+
+# def split_image(re_path):
+#     imgs = read_image_all(re_path)
+#     count = 1
 
 split_image("image_data/good", "image_data/good_split", "good")
 split_image("image_data/bad", "image_data/bad_split", "bad")
