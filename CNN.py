@@ -62,6 +62,7 @@ y_val=label[s:]
 x=tf.placeholder(tf.float32,shape=[None,w,h,c],name='x')
 y_=tf.placeholder(tf.int32,shape=[None,],name='y_')
 
+
 def inference(input_tensor, train, regularizer):
     with tf.variable_scope('layer1-conv1'):
         conv1_weights = tf.get_variable("weight",[5,5,3,32],initializer=tf.truncated_normal_initializer(stddev=0.1))
@@ -159,8 +160,8 @@ def minibatches(inputs=None, targets=None, batch_size=None, shuffle=False):
 
 #训练和测试数据，可将n_epoch设置更大一些
 
-n_epoch=10
-batch_size=32
+n_epoch=100
+batch_size=64
 saver=tf.train.Saver()
 sess=tf.Session()
 sess.run(tf.global_variables_initializer())
