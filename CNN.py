@@ -32,7 +32,7 @@ def read_img(path):
             img=io.imread(im)
             # io.imshow(img)
             # plt.show()
-            img=transform.resize(img,(w,h,c))
+            img=transform.resize(img,(w,h,c),mode='constant')
             # io.imshow(img)
             # plt.show()
             imgs.append(img)
