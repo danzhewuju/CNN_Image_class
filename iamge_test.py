@@ -6,12 +6,13 @@ import numpy as np
 import os
 import glob
 
+w = 100
+h = 100
+c = 1
+
 
 def run(data):
     flower_dict = {0: "不合格", 1: "合格"}
-    w = 100
-    h = 100
-    c = 3
     result = []
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph('./train_dir/model.ckpt.meta')
@@ -54,7 +55,7 @@ def test(path):
         ims = np.hsplit(data, 3)
         data_tm = []
         for p in ims:
-            data_tm.append(transform.resize(p, (100, 100, 3), mode='constant'))
+            data_tm.append(transform.resize(p, (w, h, c), mode='constant'))
         data_tm = np.array(data_tm)
         result = run(data_tm)
         if result.count("合格") == 3:

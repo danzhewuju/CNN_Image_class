@@ -15,7 +15,7 @@ model_path='./train_dir/model.ckpt'
 #将所有的图片resize成100*100
 w=100
 h=100
-c=3                      #表示三通道
+c=1                      #表示三通道
 
 
 N_class = 2                #要分类的类型
@@ -65,7 +65,7 @@ y_=tf.placeholder(tf.int32,shape=[None,],name='y_')
 
 def inference(input_tensor, train, regularizer):
     with tf.variable_scope('layer1-conv1'):
-        conv1_weights = tf.get_variable("weight",[5,5,3,32],initializer=tf.truncated_normal_initializer(stddev=0.1))
+        conv1_weights = tf.get_variable("weight",[5,5,c,32],initializer=tf.truncated_normal_initializer(stddev=0.1))
         conv1_biases = tf.get_variable("bias", [32], initializer=tf.constant_initializer(0.0))
         conv1 = tf.nn.conv2d(input_tensor, conv1_weights, strides=[1, 1, 1, 1], padding='SAME')
         relu1 = tf.nn.relu(tf.nn.bias_add(conv1, conv1_biases))
