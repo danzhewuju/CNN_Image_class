@@ -160,8 +160,8 @@ def minibatches(inputs=None, targets=None, batch_size=None, shuffle=False):
 
 #训练和测试数据，可将n_epoch设置更大一些
 
-n_epoch=100
-batch_size=64
+n_epoch=20
+batch_size=48
 saver=tf.train.Saver()
 sess=tf.Session()
 sess.run(tf.global_variables_initializer())
