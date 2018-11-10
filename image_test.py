@@ -5,14 +5,43 @@ import tensorflow as tf
 import numpy as np
 import os
 import glob
+import cv2
 
 w = 100
 h = 100
 c = 1
 
 
+def cv_imread(file_path):             #主要是用于cv2读取中文目录文件的问题
+    cv_img = cv2.imdecode(np.fromfile(file_path, dtype=np.uint8), -1)
+    return cv_img
+
+
+def draw(flag, path):
+    color = {1: (255, 0, 0), 2: (0, 255, 0), 3: (0, 0, 255)}
+
+    def draw_rectangle(n):
+        d = 800
+        w = 554
+        cv2.rectangle(im, (433+(n-1)*w, 600), (433 + n*w, 600 + d), color[n], 4)
+
+    new_path = "result/bad_image/" + path.split("\\")[-1]
+    im = cv_imread(path)
+    for i in flag:
+        draw_rectangle(i)
+    plt.imshow(im)
+    plt.savefig(new_path)
+    plt.show()
+
+
 def run(data):
-    flower_dict = {0: "不合格", 1: "合格"}
+    path = "datasets/photos"
+    cate = [x for x in os.listdir(path) if os.path.isdir(path + "/" + x)]
+    flower_dict = {}
+    if cate[0] == "bad_split":
+        flower_dict = {0: "不合格", 1: "合格"}
+    else:
+        flower_dict = {0: "合格", 1: "不合格"}
     result = []
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph('./train_dir/model.ckpt.meta')
@@ -26,12 +55,6 @@ def run(data):
 
         classification_result = sess.run(logits, feed_dict)
 
-        # 打印出预测矩阵
-        # print(classification_result)
-        # print(classification_result.shape)
-        # 打印出预测矩阵每一行最大值的索引
-        # print(tf.argmax(classification_result, 1).eval())
-        # 根据索引通过字典对应图片的分类
         output = []
         output = tf.argmax(classification_result, 1).eval()
         for i in range(len(output)):
@@ -42,7 +65,8 @@ def run(data):
 
 def read_paths(path):
     path = "./test"
-    paths = glob.glob(path + "/*.jpg")
+    # paths = glob.glob(path + "/*.jpg")
+    paths = glob.glob(os.path.join(path, "*.jpg"))
     return paths
 
 
@@ -66,10 +90,14 @@ def test(path):
                 if result[index] == "不合格":
                     tem.append(str(index+1))
             result = "不合格:"
+            #在此圈出不合格的商品
+            bad_index = list(map(lambda x: int(x), tem))
+            draw(bad_index, p_tem)    #保存统计信息
             tem_s = ",".join(tem)
             result += tem_s + "\n"
         f.write(result)
         print("图片%s的测试结果为:%s" % (p_tem, result))
+
     f.close()
     print("Testing Finished")
 
