@@ -6,6 +6,9 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
 
 #数据集地址
 path='./datasets/photos/'
@@ -96,7 +99,6 @@ def inference(input_tensor, train, regularizer):
         conv4_biases = tf.get_variable("bias", [128], initializer=tf.constant_initializer(0.0))
         conv4 = tf.nn.conv2d(pool3, conv4_weights, strides=[1, 1, 1, 1], padding='SAME')
         relu4 = tf.nn.relu(tf.nn.bias_add(conv4, conv4_biases))
-
     with tf.name_scope("layer8-pool4"):
         pool4 = tf.nn.max_pool(relu4, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         nodes = 6*6*128
@@ -161,7 +163,7 @@ def minibatches(inputs=None, targets=None, batch_size=None, shuffle=False):
 #训练和测试数据，可将n_epoch设置更大一些
 
 n_epoch=100
-batch_size=48
+batch_size=64
 saver=tf.train.Saver()
 sess=tf.Session()
 sess.run(tf.global_variables_initializer())
